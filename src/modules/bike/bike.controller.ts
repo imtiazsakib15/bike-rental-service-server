@@ -46,4 +46,17 @@ const getById = catchAsync(async (req, res) => {
   });
 });
 
-export const BikeControllers = { create, getAll, getById };
+const updateById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const bikeInfo = req.body;
+  const result = await BikeServices.updateByIdFromDB(id, bikeInfo);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Bike updated successfully',
+    data: result,
+  });
+});
+
+export const BikeControllers = { create, getAll, getById, updateById };

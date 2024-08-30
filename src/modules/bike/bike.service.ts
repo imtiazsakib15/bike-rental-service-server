@@ -30,4 +30,24 @@ const getByIdFromDB = async (id: string) => {
   return result;
 };
 
-export const BikeServices = { createIntoDB, getAllFromDB, getByIdFromDB };
+const updateByIdFromDB = async (id: string, payload: Partial<IBike>) => {
+  const requestedBike = await Bike.findById(id);
+
+  if (!requestedBike) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Bike not found');
+  }
+
+  const result = await Bike.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  });
+
+  return result;
+};
+
+export const BikeServices = {
+  createIntoDB,
+  getAllFromDB,
+  getByIdFromDB,
+  updateByIdFromDB,
+};
