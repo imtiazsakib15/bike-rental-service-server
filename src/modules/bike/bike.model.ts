@@ -29,7 +29,6 @@ const bikeSchema = new Schema<IBike>(
     cc: {
       type: Number,
       required: [true, 'Engine capacity (cc) is required'],
-      min: [50, 'Engine capacity must be at least 50 cc'],
     },
     year: {
       type: Number,
