@@ -34,4 +34,16 @@ const getAll = catchAsync(async (req, res) => {
   });
 });
 
-export const BikeControllers = { create, getAll };
+const getById = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await BikeServices.getByIdFromDB(id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Bike retrieved successfully',
+    data: result,
+  });
+});
+
+export const BikeControllers = { create, getAll, getById };

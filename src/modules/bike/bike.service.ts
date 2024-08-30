@@ -21,4 +21,13 @@ const getAllFromDB = async () => {
   return result;
 };
 
-export const BikeServices = { createIntoDB, getAllFromDB };
+const getByIdFromDB = async (id: string) => {
+  const result = await Bike.findById(id);
+
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Bike not found');
+  }
+  return result;
+};
+
+export const BikeServices = { createIntoDB, getAllFromDB, getByIdFromDB };

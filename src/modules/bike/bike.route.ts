@@ -13,4 +13,6 @@ router.post(
 
 router.get('/', BikeControllers.getAll);
 
+router.get('/:id', BikeControllers.getById);
+
 export const BikeRoutes = router;
