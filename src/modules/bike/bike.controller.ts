@@ -15,4 +15,23 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
-export const BikeControllers = { create };
+const getAll = catchAsync(async (req, res) => {
+  const result = await BikeServices.getAllFromDB();
+
+  if (result?.length === 0)
+    sendResponse(res, {
+      success: false,
+      statusCode: httpStatus.NOT_FOUND,
+      message: 'No Data Found',
+      data: result,
+    });
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Bikes retrieved successfully',
+    data: result,
+  });
+});
+
+export const BikeControllers = { create, getAll };

@@ -15,4 +15,10 @@ const createIntoDB = async (payload: IBike) => {
   return result;
 };
 
-export const BikeServices = { createIntoDB };
+const getAllFromDB = async () => {
+  const result = await Bike.find();
+
+  return result;
+};
+
+export const BikeServices = { createIntoDB, getAllFromDB };
