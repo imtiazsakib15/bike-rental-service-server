@@ -31,17 +31,23 @@ const getByIdFromDB = async (id: string) => {
 };
 
 const updateByIdFromDB = async (id: string, payload: Partial<IBike>) => {
-  const requestedBike = await Bike.findById(id);
-
-  if (!requestedBike) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Bike not found');
-  }
-
   const result = await Bike.findByIdAndUpdate(id, payload, {
     new: true,
     runValidators: true,
   });
 
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Bike not found');
+  }
+  return result;
+};
+
+const deleteByIdFromDB = async (id: string) => {
+  const result = await Bike.findByIdAndDelete(id);
+
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Bike not found');
+  }
   return result;
 };
 
@@ -50,4 +56,5 @@ export const BikeServices = {
   getAllFromDB,
   getByIdFromDB,
   updateByIdFromDB,
+  deleteByIdFromDB,
 };
