@@ -21,6 +21,7 @@ const bookingSchema = new Schema<IBooking>(
     },
     returnTime: {
       type: Date,
+      required: [true, 'Start time is required'],
       default: null,
     },
     totalCost: {
