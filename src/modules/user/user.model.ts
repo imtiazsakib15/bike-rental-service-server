@@ -1,7 +1,10 @@
 import { Schema, model } from 'mongoose';
 import { IUser } from './user.interface';
+import { USER_ROLE } from './user.constant';
+import bcrypt from 'bcrypt';
+import config from '../../config';
 
-const userSchema: Schema = new Schema<IUser>(
+const userSchema = new Schema<IUser>(
   {
     name: {
       type: String,
@@ -35,8 +38,8 @@ const userSchema: Schema = new Schema<IUser>(
     },
     role: {
       type: String,
-      enum: ['admin', 'user'],
-      default: 'user',
+      enum: Object.values(USER_ROLE),
+      default: USER_ROLE.USER,
       required: [true, 'Role is required'],
     },
   },
@@ -44,6 +47,15 @@ const userSchema: Schema = new Schema<IUser>(
     timestamps: true,
   },
 );
+
+userSchema.pre('save', async function (next) {
+  this.password = await bcrypt.hash(
+    this.password,
+    config.BCRYPT_SALT_ROUNDS as string,
+  );
+
+  next();
+});
 
 const User = model<IUser>('User', userSchema);
 
