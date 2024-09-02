@@ -3,10 +3,14 @@ import AppError from '../../errors/AppError';
 import { IUser } from '../user/user.interface';
 import User from '../user/user.model';
 import { USER_ROLE } from '../user/user.constant';
+import { ILoginUser } from './auth.interface';
+import { isPasswordMatch } from './auth.utils';
+import jwt from 'jsonwebtoken';
+import config from '../../config';
 
 const register = async (payload: IUser) => {
-  const existingUser = await User.findOne({ email: payload.email });
-  if (existingUser) {
+  const user = await User.findOne({ email: payload.email });
+  if (user) {
     throw new AppError(httpStatus.CONFLICT, 'Email already in use');
   }
 
@@ -19,4 +23,33 @@ const register = async (payload: IUser) => {
   return newUser;
 };
 
-export const AuthServices = { register };
+const login = async (payload: ILoginUser) => {
+  const user = await User.findOne({ email: payload.email });
+  if (!user) throw new AppError(httpStatus.NOT_FOUND, 'No user found');
+
+  const isUserPasswordMatch = await isPasswordMatch(
+    payload.password,
+    user.password,
+  );
+  if (!isUserPasswordMatch)
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid password');
+
+  const jwtPayload = {
+    email: user.email,
+    role: user.role,
+  };
+  const accessToken = jwt.sign(
+    jwtPayload,
+    config.ACCESS_TOKEN_SECRET as string,
+    { expiresIn: config.ACCESS_TOKEN_EXPIRES_IN },
+  );
+  const refreshToken = jwt.sign(
+    jwtPayload,
+    config.REFRESH_TOKEN_SECRET as string,
+    { expiresIn: config.REFRESH_TOKEN_EXPIRES_IN },
+  );
+
+  return { user, accessToken, refreshToken };
+};
+
+export const AuthServices = { register, login };

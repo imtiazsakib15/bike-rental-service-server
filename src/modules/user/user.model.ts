@@ -51,9 +51,13 @@ const userSchema = new Schema<IUser>(
 userSchema.pre('save', async function (next) {
   this.password = await bcrypt.hash(
     this.password,
-    config.BCRYPT_SALT_ROUNDS as string,
+    Number(config.BCRYPT_SALT_ROUNDS),
   );
 
+  next();
+});
+userSchema.post('save', async function (doc, next) {
+  doc.password = '';
   next();
 });
 
