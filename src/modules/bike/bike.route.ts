@@ -20,10 +20,11 @@ router.get('/:id', BikeControllers.getById);
 
 router.put(
   '/:id',
+  auth(USER_ROLE.ADMIN),
   validateRequest(BikeValidationSchemas.updateSchema),
   BikeControllers.updateById,
 );
 
-router.delete('/:id', BikeControllers.deleteById);
+router.delete('/:id', auth(USER_ROLE.ADMIN), BikeControllers.deleteById);
 
 export const BikeRoutes = router;

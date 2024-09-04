@@ -2,7 +2,6 @@ import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { IUser } from '../user/user.interface';
 import User from '../user/user.model';
-import { USER_ROLE } from '../user/user.constant';
 import { ILoginUser } from './auth.interface';
 import { isPasswordMatch } from './auth.utils';
 import jwt from 'jsonwebtoken';
@@ -13,8 +12,6 @@ const register = async (payload: IUser) => {
   if (user) {
     throw new AppError(httpStatus.CONFLICT, 'Email already in use');
   }
-
-  payload.role = USER_ROLE.USER;
 
   const newUser = await User.create(payload);
   if (!newUser) {
