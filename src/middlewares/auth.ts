@@ -9,24 +9,26 @@ import { USER_ROLE } from '../modules/user/user.constant';
 export const auth = (
   ...checkedRoles: (typeof USER_ROLE)[keyof typeof USER_ROLE][]
 ) => {
-  catchAsync(async (req, res, next) => {
+  return catchAsync(async (req, res, next) => {
     const accessToken = req.headers?.authorization?.split(' ')[1];
-    const payload = jwt.verify(
+    const decodedUser = jwt.verify(
       accessToken as string,
       config.ACCESS_TOKEN_SECRET as string,
     ) as JwtPayload;
 
-    if (!payload)
+    if (!decodedUser)
       throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid access token');
 
-    const user = await User.findOne({ email: payload.email });
+    const user = await User.findOne({ email: decodedUser.email });
     if (!user) throw new AppError(httpStatus.UNAUTHORIZED, 'User not found');
 
-    if (!checkedRoles.includes(user.role) || user.role !== payload.role)
+    if (!checkedRoles.includes(user.role) || user.role !== decodedUser.role)
       throw new AppError(
         httpStatus.FORBIDDEN,
         'Unauthorized to perform this action',
       );
+
+    req.user = user as JwtPayload;
     next();
   });
 };
