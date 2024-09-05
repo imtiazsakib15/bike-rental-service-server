@@ -3,10 +3,10 @@ import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
 import { UserServices } from './user.service';
 
-const getMe = catchAsync(async (req, res) => {
+const getProfile = catchAsync(async (req, res) => {
   const userInfo = req.user;
 
-  const result = await UserServices.getMeFromDB(userInfo);
+  const result = await UserServices.getProfileFromDB(userInfo);
 
   sendResponse(res, {
     success: true,
@@ -16,4 +16,17 @@ const getMe = catchAsync(async (req, res) => {
   });
 });
 
-export const UserControllers = { getMe };
+const updateProfile = catchAsync(async (req, res) => {
+  const id = req.user?._id;
+
+  const result = await UserServices.updateProfileFromDB(id, req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Profile updated successfully',
+    data: result,
+  });
+});
+
+export const UserControllers = { getProfile, updateProfile };
