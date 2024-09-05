@@ -28,7 +28,7 @@ export const auth = (
         'Unauthorized to perform this action',
       );
 
-    req.user = user as JwtPayload;
+    req.user = user;
     next();
   });
 };
