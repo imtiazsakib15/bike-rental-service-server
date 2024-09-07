@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 
-export interface IBooking {
+export interface IRental {
   userId: Types.ObjectId;
   bikeId: Types.ObjectId;
   startTime: Date;

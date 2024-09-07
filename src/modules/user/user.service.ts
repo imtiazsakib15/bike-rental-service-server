@@ -3,8 +3,7 @@ import AppError from '../../errors/AppError';
 import User from './user.model';
 
 const getProfileFromDB = async (payload: Record<string, unknown>) => {
-  const user = { ...payload };
-  delete user.password;
+  const user = payload;
   return user;
 };
 
@@ -12,7 +11,11 @@ const updateProfileFromDB = async (
   id: string,
   payload: Record<string, unknown>,
 ) => {
-  const result = await User.findByIdAndUpdate(id, payload, {
+  const { ...profileInfo } = payload;
+  delete profileInfo.email;
+  delete profileInfo.password;
+
+  const result = await User.findByIdAndUpdate(id, profileInfo, {
     new: true,
     runValidators: true,
   });

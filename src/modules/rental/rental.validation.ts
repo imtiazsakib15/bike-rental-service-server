@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const createSchema = z
+const createRentalSchema = z
   .object({
     userId: z.string({
       required_error: 'User ID is required',
@@ -20,9 +20,9 @@ const createSchema = z
     isReturned: z.boolean().default(false),
   })
   .refine(
-    (booking) => {
-      if (booking.returnTime === null) return true;
-      return booking.returnTime >= booking.startTime;
+    (rental) => {
+      if (rental.returnTime === null) return true;
+      return rental.returnTime >= rental.startTime;
     },
     {
       message: 'Return time must be on or after the start time',
@@ -30,4 +30,4 @@ const createSchema = z
     },
   );
 
-export const BookingValidationSchemas = { createSchema };
+export const RentalValidationSchemas = { createRentalSchema };
