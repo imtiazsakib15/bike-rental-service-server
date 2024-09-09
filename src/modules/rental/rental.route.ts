@@ -14,4 +14,10 @@ router.post(
   RentalControllers.create,
 );
 
+router.put(
+  '/:id/return',
+  auth(USER_ROLE.ADMIN),
+  RentalControllers.updateReturnStatus,
+);
+
 export const RentalRoutes = router;

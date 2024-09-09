@@ -16,4 +16,16 @@ const create = catchAsync(async (req, res) => {
   });
 });
 
-export const RentalControllers = { create };
+const updateReturnStatus = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await RentalServices.updateReturnStatusIntoDB(id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Bike returned successfully',
+    data: result,
+  });
+});
+
+export const RentalControllers = { create, updateReturnStatus };
