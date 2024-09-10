@@ -104,4 +104,14 @@ const updateReturnStatusIntoDB = async (rentalId: string) => {
   }
 };
 
-export const RentalServices = { createIntoDB, updateReturnStatusIntoDB };
+const getRentalOfUsersFromDB = async (userId: string) => {
+  const rentals = await Rental.find({ userId });
+
+  return rentals;
+};
+
+export const RentalServices = {
+  createIntoDB,
+  updateReturnStatusIntoDB,
+  getRentalOfUsersFromDB,
+};

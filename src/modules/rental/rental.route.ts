@@ -20,4 +20,10 @@ router.put(
   RentalControllers.updateReturnStatus,
 );
 
+router.get(
+  '/',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  RentalControllers.getRentalOfUsers,
+);
+
 export const RentalRoutes = router;

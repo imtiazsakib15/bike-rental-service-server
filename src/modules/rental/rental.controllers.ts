@@ -28,4 +28,24 @@ const updateReturnStatus = catchAsync(async (req, res) => {
   });
 });
 
-export const RentalControllers = { create, updateReturnStatus };
+const getRentalOfUsers = catchAsync(async (req, res) => {
+  const userId = req.user?._id;
+  const result = await RentalServices.getRentalOfUsersFromDB(userId);
+  if (result?.length === 0)
+    res
+      .status(httpStatus.NOT_FOUND)
+      .json({ success: false, message: 'No Data Found', data: result });
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Rentals retrieved successfully',
+    data: result,
+  });
+});
+
+export const RentalControllers = {
+  create,
+  updateReturnStatus,
+  getRentalOfUsers,
+};

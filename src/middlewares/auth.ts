@@ -11,6 +11,10 @@ export const auth = (
 ) => {
   return catchAsync(async (req, res, next) => {
     const accessToken = req.headers?.authorization?.split(' ')[1];
+    if (!accessToken)
+      throw new AppError(httpStatus.UNAUTHORIZED, 'No access token provided');
+
+    // Verify access token signature and decode payload
     const decodedUser = jwt.verify(
       accessToken as string,
       config.ACCESS_TOKEN_SECRET as string,
