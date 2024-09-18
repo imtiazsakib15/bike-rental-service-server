@@ -45,6 +45,7 @@ const login = async (payload: ILoginUser) => {
     config.REFRESH_TOKEN_SECRET as string,
     { expiresIn: config.REFRESH_TOKEN_EXPIRES_IN },
   );
+  user.password = '';
 
   return { user, accessToken, refreshToken };
 };

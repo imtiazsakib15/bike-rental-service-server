@@ -4,6 +4,7 @@ import User from './user.model';
 
 const getProfileFromDB = async (payload: Record<string, unknown>) => {
   const user = payload;
+  user.password = '';
   return user;
 };
 
@@ -18,7 +19,7 @@ const updateProfileFromDB = async (
   const result = await User.findByIdAndUpdate(id, profileInfo, {
     new: true,
     runValidators: true,
-  });
+  }).select('-password');
 
   if (!result) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');

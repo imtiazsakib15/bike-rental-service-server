@@ -13,7 +13,7 @@ const createUserSchema = z.object({
     .toLowerCase(),
   password: z
     .string()
-    .min(8, { message: 'Password must be at least 8 characters long' }),
+    .min(6, { message: 'Password must be at least 6 characters long' }),
   phone: z
     .string()
     .regex(/^\+?\d{10,15}$/, {

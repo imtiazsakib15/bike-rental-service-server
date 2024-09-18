@@ -23,7 +23,7 @@ const userSchema = new Schema<IUser>(
     password: {
       type: String,
       required: [true, 'Password is required'],
-      minlength: [8, 'Password must be at least 8 characters long'],
+      minlength: [6, 'Password must be at least 6 characters long'],
     },
     phone: {
       type: String,
@@ -57,7 +57,7 @@ userSchema.pre('save', async function (next) {
   next();
 });
 userSchema.post('save', async function (doc, next) {
-  doc.password = '';
+  if (doc) doc.password = '';
   next();
 });
 
