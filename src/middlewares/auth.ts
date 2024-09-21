@@ -5,6 +5,7 @@ import AppError from '../errors/AppError';
 import httpStatus from 'http-status';
 import User from '../modules/user/user.model';
 import { USER_ROLE } from '../modules/user/user.constant';
+import { verifyJWT } from '../utils/verifyJWT';
 
 export const auth = (
   ...checkedRoles: (typeof USER_ROLE)[keyof typeof USER_ROLE][]
@@ -15,18 +16,16 @@ export const auth = (
       throw new AppError(httpStatus.UNAUTHORIZED, 'No access token provided');
 
     // Verify access token signature and decode payload
-    const decodedUser = jwt.verify(
-      accessToken as string,
-      config.ACCESS_TOKEN_SECRET as string,
-    ) as JwtPayload;
+    const decodedUser = verifyJWT(accessToken);
 
     if (!decodedUser)
       throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid access token');
 
-    const user = await User.findOne({ email: decodedUser.email });
+    const { email, role } = decodedUser as JwtPayload;
+    const user = await User.findOne({ email });
     if (!user) throw new AppError(httpStatus.UNAUTHORIZED, 'User not found');
 
-    if (!checkedRoles.includes(user.role) || user.role !== decodedUser.role)
+    if (!checkedRoles.includes(user.role) || user.role !== role)
       throw new AppError(
         httpStatus.FORBIDDEN,
         'Unauthorized to perform this action',
