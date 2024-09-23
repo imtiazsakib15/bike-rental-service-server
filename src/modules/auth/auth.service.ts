@@ -3,8 +3,7 @@ import AppError from '../../errors/AppError';
 import { IUser } from '../user/user.interface';
 import User from '../user/user.model';
 import { ILoginUser } from './auth.interface';
-import { isPasswordMatch } from './auth.utils';
-import jwt from 'jsonwebtoken';
+import { createToken, isPasswordMatch } from './auth.utils';
 import config from '../../config';
 
 const register = async (payload: IUser) => {
@@ -35,15 +34,15 @@ const login = async (payload: ILoginUser) => {
     email: user.email,
     role: user.role,
   };
-  const accessToken = jwt.sign(
+  const accessToken = createToken(
     jwtPayload,
     config.ACCESS_TOKEN_SECRET as string,
-    { expiresIn: config.ACCESS_TOKEN_EXPIRES_IN },
+    config.ACCESS_TOKEN_EXPIRES_IN as string,
   );
-  const refreshToken = jwt.sign(
+  const refreshToken = createToken(
     jwtPayload,
     config.REFRESH_TOKEN_SECRET as string,
-    { expiresIn: config.REFRESH_TOKEN_EXPIRES_IN },
+    config.REFRESH_TOKEN_EXPIRES_IN as string,
   );
   user.password = '';
 

@@ -1,11 +1,11 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken';
 import { catchAsync } from '../utils/catchAsync';
 import config from '../config';
 import AppError from '../errors/AppError';
 import httpStatus from 'http-status';
 import User from '../modules/user/user.model';
 import { USER_ROLE } from '../modules/user/user.constant';
-import { verifyJWT } from '../utils/verifyJWT';
+import { verifyToken } from '../modules/auth/auth.utils';
 
 export const auth = (
   ...checkedRoles: (typeof USER_ROLE)[keyof typeof USER_ROLE][]
@@ -16,7 +16,10 @@ export const auth = (
       throw new AppError(httpStatus.UNAUTHORIZED, 'No access token provided');
 
     // Verify access token signature and decode payload
-    const decodedUser = verifyJWT(accessToken);
+    const decodedUser = verifyToken(
+      accessToken,
+      config.ACCESS_TOKEN_SECRET as string,
+    );
 
     if (!decodedUser)
       throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid access token');
