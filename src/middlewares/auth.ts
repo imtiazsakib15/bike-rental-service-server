@@ -34,7 +34,6 @@ export const auth = (
         'Unauthorized to perform this action',
       );
 
-    req.user = user;
     next();
   });
 };

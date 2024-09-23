@@ -5,8 +5,8 @@ import { RentalServices } from './rental.service';
 
 const create = catchAsync(async (req, res) => {
   const rentalInfo = req.body;
-  const userEmail = req.user?.email;
-  const result = await RentalServices.createIntoDB(userEmail, rentalInfo);
+  const token = req.headers.authorization?.split(' ')[1] as string;
+  const result = await RentalServices.createIntoDB(token, rentalInfo);
 
   sendResponse(res, {
     success: true,
@@ -29,8 +29,8 @@ const updateReturnStatus = catchAsync(async (req, res) => {
 });
 
 const getRentalOfUsers = catchAsync(async (req, res) => {
-  const userId = req.user?._id;
-  const result = await RentalServices.getRentalOfUsersFromDB(userId);
+  const token = req.headers.authorization?.split(' ')[1] as string;
+  const result = await RentalServices.getRentalOfUsersFromDB(token);
   if (result?.length === 0)
     res
       .status(httpStatus.NOT_FOUND)

@@ -5,8 +5,11 @@ import User from '../user/user.model';
 import { IRental } from './rental.interface';
 import Rental from './rental.model';
 import mongoose from 'mongoose';
+import { decodeUserFromAccessToken } from '../auth/auth.utils';
 
-const createIntoDB = async (userEmail: string, payload: IRental) => {
+const createIntoDB = async (token: string, payload: IRental) => {
+  const decodedUserInfo = decodeUserFromAccessToken(token);
+
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
@@ -16,7 +19,7 @@ const createIntoDB = async (userEmail: string, payload: IRental) => {
     if (!requestedBike.isAvailable)
       throw new AppError(httpStatus.BAD_REQUEST, 'Bike is not available');
 
-    const user = await User.findOne({ email: userEmail });
+    const user = await User.findOne({ email: decodedUserInfo.email });
     const rentalDetails = {
       userId: user?._id,
       bikeId: payload.bikeId,
@@ -104,8 +107,13 @@ const updateReturnStatusIntoDB = async (rentalId: string) => {
   }
 };
 
-const getRentalOfUsersFromDB = async (userId: string) => {
-  const rentals = await Rental.find({ userId });
+const getRentalOfUsersFromDB = async (token: string) => {
+  const decodedUserInfo = decodeUserFromAccessToken(token);
+
+  const user = await User.findOne({
+    email: decodedUserInfo.email,
+  });
+  const rentals = await Rental.find({ userId: user?._id });
 
   return rentals;
 };

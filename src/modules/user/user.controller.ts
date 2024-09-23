@@ -4,9 +4,9 @@ import { sendResponse } from '../../utils/sendResponse';
 import { UserServices } from './user.service';
 
 const getProfile = catchAsync(async (req, res) => {
-  const userInfo = req.user;
+  const token = req.headers.authorization?.split(' ')[1] as string;
 
-  const result = await UserServices.getProfileFromDB(userInfo);
+  const result = await UserServices.getProfileFromDB(token);
 
   sendResponse(res, {
     success: true,
@@ -17,9 +17,9 @@ const getProfile = catchAsync(async (req, res) => {
 });
 
 const updateProfile = catchAsync(async (req, res) => {
-  const id = req.user?._id;
+  const token = req.headers.authorization?.split(' ')[1] as string;
 
-  const result = await UserServices.updateProfileFromDB(id, req.body);
+  const result = await UserServices.updateProfileFromDB(token, req.body);
 
   sendResponse(res, {
     success: true,

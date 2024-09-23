@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { IJwtPayload } from './auth.interface';
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
+import config from '../../config';
 
 export const isPasswordMatch = async (
   password: string,
@@ -22,3 +23,6 @@ export const verifyToken = (token: string, tokenSecret: string) => {
     throw new AppError(httpStatus.UNAUTHORIZED, ' Unauthorized');
   }
 };
+
+export const decodeUserFromAccessToken = (token: string) =>
+  verifyToken(token, config.ACCESS_TOKEN_SECRET as string) as JwtPayload;
