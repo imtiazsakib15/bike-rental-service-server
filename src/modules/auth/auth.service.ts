@@ -16,7 +16,24 @@ const register = async (payload: IUser) => {
   if (!newUser) {
     throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to register');
   }
-  return newUser;
+
+  const jwtPayload = {
+    email: newUser.email,
+    role: newUser.role,
+  };
+  const accessToken = createToken(
+    jwtPayload,
+    config.ACCESS_TOKEN_SECRET as string,
+    config.ACCESS_TOKEN_EXPIRES_IN as string,
+  );
+  const refreshToken = createToken(
+    jwtPayload,
+    config.REFRESH_TOKEN_SECRET as string,
+    config.REFRESH_TOKEN_EXPIRES_IN as string,
+  );
+  newUser.password = '';
+
+  return { user: newUser, accessToken, refreshToken };
 };
 
 const login = async (payload: ILoginUser) => {
