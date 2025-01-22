@@ -8,6 +8,7 @@ const createSchema = z.object({
     .min(2, { message: 'Bike name must be at least 2 characters long' })
     .max(100, { message: 'Bike name must be at most 100 characters long' })
     .trim(),
+  image: z.string().url({ message: 'Image must be a valid URL' }),
   description: z
     .string()
     .min(10, { message: 'Description must be at least 10 characters long' })
@@ -43,6 +44,7 @@ const updateSchema = z.object({
     .max(100, { message: 'Bike name must be at most 100 characters long' })
     .trim()
     .optional(),
+  image: z.string().url({ message: 'Image must be a valid URL' }).optional(),
   description: z
     .string()
     .min(10, { message: 'Description must be at least 10 characters long' })

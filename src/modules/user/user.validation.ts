@@ -24,10 +24,12 @@ const createUserSchema = z.object({
     .string()
     .min(5, { message: 'Address must be at least 5 characters long' })
     .trim(),
-  role: z.enum(['admin', 'user'], {
-    required_error: 'Role is required',
-    invalid_type_error: 'Role must be either admin or user',
-  }),
+  role: z
+    .enum(['admin', 'user'], {
+      // required_error: 'Role is required',
+      invalid_type_error: 'Role must be either admin or user',
+    })
+    .default('user'),
 });
 
 const updateUserSchema = z.object({

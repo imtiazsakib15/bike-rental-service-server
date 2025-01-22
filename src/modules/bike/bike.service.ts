@@ -2,6 +2,8 @@ import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { IBike } from './bike.interface';
 import { Bike } from './bike.model';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { SEARCHABLE_FIELDS } from './bike.constant';
 
 const createIntoDB = async (payload: IBike) => {
   const result = await Bike.create(payload);
@@ -15,8 +17,15 @@ const createIntoDB = async (payload: IBike) => {
   return result;
 };
 
-const getAllFromDB = async () => {
-  const result = await Bike.find();
+const getAllFromDB = async (query: Record<string, unknown>) => {
+  const bikeQuery = new QueryBuilder(Bike.find(), query)
+    .search(SEARCHABLE_FIELDS)
+    .filter()
+    .sort()
+    .pagination()
+    .fieldLimiting();
+
+  const result = await bikeQuery.modelQuery;
 
   return result;
 };

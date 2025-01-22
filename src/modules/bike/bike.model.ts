@@ -10,6 +10,10 @@ const bikeSchema = new Schema<IBike>(
       minlength: [2, 'Bike name must be at least 2 characters long'],
       maxlength: [100, 'Bike name must be at most 100 characters long'],
     },
+    image: {
+      type: String,
+      required: [true, 'Image is required'],
+    },
     description: {
       type: String,
       required: [true, 'Description is required'],

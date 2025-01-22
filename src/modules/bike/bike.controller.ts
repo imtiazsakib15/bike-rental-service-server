@@ -16,7 +16,7 @@ const create = catchAsync(async (req, res) => {
 });
 
 const getAll = catchAsync(async (req, res) => {
-  const result = await BikeServices.getAllFromDB();
+  const result = await BikeServices.getAllFromDB(req.query);
 
   if (result?.length === 0)
     sendResponse(res, {
