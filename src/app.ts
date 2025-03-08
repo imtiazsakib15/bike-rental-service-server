@@ -3,12 +3,18 @@ import cors from 'cors';
 import globalErrorHandler from './middlewares/globalErrorHandler';
 import notFound from './middlewares/notFound';
 import router from './routes';
+import config from './config';
 
 const app: Application = express();
 
 // parsers
 app.use(express.json());
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(
+  cors({
+    origin: config.CLIENT_URL,
+    credentials: true,
+  }),
+);
 
 // application routes
 app.use('/api', router);
