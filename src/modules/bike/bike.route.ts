@@ -16,6 +16,8 @@ router.post(
 
 router.get('/', BikeControllers.getAll);
 
+router.get('/total-bike-number', BikeControllers.getTotalBikeNumber);
+
 router.get('/:id', BikeControllers.getById);
 
 router.put(

@@ -39,6 +39,12 @@ const getByIdFromDB = async (id: string) => {
   return result;
 };
 
+const getTotalBikeNumberFromDB = async () => {
+  const result = await Bike.countDocuments();
+
+  return result;
+};
+
 const updateByIdFromDB = async (id: string, payload: Partial<IBike>) => {
   const result = await Bike.findByIdAndUpdate(id, payload, {
     new: true,
@@ -64,6 +70,7 @@ export const BikeServices = {
   createIntoDB,
   getAllFromDB,
   getByIdFromDB,
+  getTotalBikeNumberFromDB,
   updateByIdFromDB,
   deleteByIdFromDB,
 };
