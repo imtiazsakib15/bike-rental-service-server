@@ -38,4 +38,13 @@ const updateProfileFromDB = async (
   return result;
 };
 
-export const UserServices = { getProfileFromDB, updateProfileFromDB };
+const getAllUserFromDB = async () => {
+  const result = await User.find().select('-password');
+  return result;
+};
+
+export const UserServices = {
+  getProfileFromDB,
+  updateProfileFromDB,
+  getAllUserFromDB,
+};

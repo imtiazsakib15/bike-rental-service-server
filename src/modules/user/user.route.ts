@@ -20,4 +20,6 @@ router.put(
   UserControllers.updateProfile,
 );
 
+router.get('/', auth(USER_ROLE.ADMIN), UserControllers.getAllUser);
+
 export const UserRoutes = router;
