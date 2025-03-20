@@ -22,4 +22,11 @@ router.put(
 
 router.get('/', auth(USER_ROLE.ADMIN), UserControllers.getAllUser);
 
+router.put(
+  '/:id/update-role',
+  auth(USER_ROLE.ADMIN),
+  validateRequest(UserValidationSchemas.updateUserRoleSchema),
+  UserControllers.updateUserRole,
+);
+
 export const UserRoutes = router;

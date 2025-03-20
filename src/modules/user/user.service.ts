@@ -2,6 +2,7 @@ import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import User from './user.model';
 import { decodeUserFromAccessToken } from '../auth/auth.utils';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 const getProfileFromDB = async (token: string) => {
   const decodedUserInfo = decodeUserFromAccessToken(token);
@@ -38,13 +39,34 @@ const updateProfileFromDB = async (
   return result;
 };
 
-const getAllUserFromDB = async () => {
-  const result = await User.find().select('-password');
+const getAllUserFromDB = async (query: Record<string, unknown>) => {
+  const userQuery = new QueryBuilder(User.find(), query)
+    .search(['name', 'email'])
+    .filter();
+
+  const result = await userQuery.modelQuery;
   return result;
+};
+
+const updateUserRoleFromDB = async (id: string, role: string) => {
+  const user = await User.findByIdAndUpdate(
+    { _id: id },
+    { role },
+    {
+      new: true,
+      runValidators: true,
+    },
+  ).select('-password');
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  return user;
 };
 
 export const UserServices = {
   getProfileFromDB,
   updateProfileFromDB,
   getAllUserFromDB,
+  updateUserRoleFromDB,
 };
