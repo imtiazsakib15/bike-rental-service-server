@@ -40,6 +40,8 @@ const updateProfileFromDB = async (
 };
 
 const getAllUserFromDB = async (query: Record<string, unknown>) => {
+  if (query?.role == '') delete query.role;
+
   const userQuery = new QueryBuilder(User.find(), query)
     .search(['name', 'email'])
     .filter();

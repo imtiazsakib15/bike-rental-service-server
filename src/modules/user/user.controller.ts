@@ -30,7 +30,7 @@ const updateProfile = catchAsync(async (req, res) => {
 });
 
 const getAllUser = catchAsync(async (req, res) => {
-  const result = await UserServices.getAllUserFromDB();
+  const result = await UserServices.getAllUserFromDB(req.query);
 
   sendResponse(res, {
     success: true,
