@@ -23,19 +23,21 @@ const updateProfileFromDB = async (
   const user = await User.findOne({
     email: decodedUserInfo.email,
   });
-
-  const { ...profileInfo } = payload;
-  delete profileInfo.email;
-  delete profileInfo.password;
-
-  const result = await User.findByIdAndUpdate({ _id: user?._id }, profileInfo, {
-    new: true,
-    runValidators: true,
-  }).select('-password');
-
-  if (!result) {
+  if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
+
+  const { name, phone, address } = payload;
+
+  const result = await User.findByIdAndUpdate(
+    { _id: user._id },
+    { name, phone, address },
+    {
+      new: true,
+      runValidators: true,
+    },
+  ).select('-password');
+
   return result;
 };
 

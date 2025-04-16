@@ -42,6 +42,10 @@ const userSchema = new Schema<IUser>(
       default: USER_ROLE.USER,
       required: [true, 'Role is required'],
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,

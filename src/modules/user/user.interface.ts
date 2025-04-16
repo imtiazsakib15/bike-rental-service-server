@@ -7,4 +7,5 @@ export interface IUser {
   phone: string;
   address: string;
   role: (typeof USER_ROLE)[keyof typeof USER_ROLE];
+  isActive: boolean;
 }
