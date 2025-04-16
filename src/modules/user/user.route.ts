@@ -16,7 +16,7 @@ router.get(
 router.put(
   '/me',
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),
-  validateRequest(UserValidationSchemas.updateUserSchema),
+  validateRequest(UserValidationSchemas.updateProfileSchema),
   UserControllers.updateProfile,
 );
 
@@ -25,8 +25,8 @@ router.get('/', auth(USER_ROLE.ADMIN), UserControllers.getAllUser);
 router.put(
   '/:id/update-role',
   auth(USER_ROLE.ADMIN),
-  validateRequest(UserValidationSchemas.updateUserRoleSchema),
-  UserControllers.updateUserRole,
+  validateRequest(UserValidationSchemas.updateUserSchema),
+  UserControllers.updateUser,
 );
 
 export const UserRoutes = router;

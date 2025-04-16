@@ -3,6 +3,7 @@ import AppError from '../../errors/AppError';
 import User from './user.model';
 import { decodeUserFromAccessToken } from '../auth/auth.utils';
 import QueryBuilder from '../../builder/QueryBuilder';
+import { IUser } from './user.interface';
 
 const getProfileFromDB = async (token: string) => {
   const decodedUserInfo = decodeUserFromAccessToken(token);
@@ -16,7 +17,7 @@ const getProfileFromDB = async (token: string) => {
 
 const updateProfileFromDB = async (
   token: string,
-  payload: Record<string, unknown>,
+  payload: Pick<IUser, 'name' | 'phone' | 'address'>,
 ) => {
   const decodedUserInfo = decodeUserFromAccessToken(token);
 
@@ -52,10 +53,14 @@ const getAllUserFromDB = async (query: Record<string, unknown>) => {
   return result;
 };
 
-const updateUserRoleFromDB = async (id: string, role: string) => {
+const updateUserFromDB = async (
+  id: string,
+  payload: Pick<IUser, 'role' | 'isActive'>,
+) => {
+  const { role, isActive } = payload;
   const user = await User.findByIdAndUpdate(
     { _id: id },
-    { role },
+    { role, isActive },
     {
       new: true,
       runValidators: true,
@@ -72,5 +77,5 @@ export const UserServices = {
   getProfileFromDB,
   updateProfileFromDB,
   getAllUserFromDB,
-  updateUserRoleFromDB,
+  updateUserFromDB,
 };

@@ -32,7 +32,7 @@ const createUserSchema = z.object({
   isActive: z.boolean().default(true),
 });
 
-const updateUserSchema = z.object({
+const updateProfileSchema = z.object({
   name: z
     .string()
     .min(2, { message: 'Name must be at least 2 characters long' })
@@ -53,15 +53,17 @@ const updateUserSchema = z.object({
     .optional(),
 });
 
-const updateUserRoleSchema = z.object({
-  role: z.enum(['admin', 'user'], {
-    required_error: 'Role is required',
-    invalid_type_error: 'Role must be either admin or user',
-  }),
+const updateUserSchema = z.object({
+  role: z
+    .enum(['admin', 'user'], {
+      invalid_type_error: 'Role must be either admin or user',
+    })
+    .optional(),
+  isActive: z.boolean().optional(),
 });
 
 export const UserValidationSchemas = {
   createUserSchema,
+  updateProfileSchema,
   updateUserSchema,
-  updateUserRoleSchema,
 };
