@@ -40,6 +40,9 @@ const login = async (payload: ILoginUser) => {
   const user = await User.findOne({ email: payload.email });
   if (!user) throw new AppError(httpStatus.NOT_FOUND, 'No user found');
 
+  if (!user.isActive)
+    throw new AppError(httpStatus.UNAUTHORIZED, 'User is blocked');
+
   const isUserPasswordMatch = await isPasswordMatch(
     payload.password,
     user.password,

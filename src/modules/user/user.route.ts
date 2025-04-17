@@ -23,7 +23,7 @@ router.put(
 router.get('/', auth(USER_ROLE.ADMIN), UserControllers.getAllUser);
 
 router.put(
-  '/:id/update-role',
+  '/:id',
   auth(USER_ROLE.ADMIN),
   validateRequest(UserValidationSchemas.updateUserSchema),
   UserControllers.updateUser,
