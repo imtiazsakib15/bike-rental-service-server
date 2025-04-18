@@ -41,4 +41,23 @@ const login = catchAsync(async (req, res) => {
   });
 });
 
-export const AuthControllers = { register, login };
+const refreshToken = catchAsync(async (req, res) => {
+  const refreshToken = req.headers.cookie?.split('=')[1];
+  if (!refreshToken) {
+    return res.status(httpStatus.UNAUTHORIZED).json({
+      success: false,
+      statusCode: httpStatus.UNAUTHORIZED,
+      message: 'No refresh token provided',
+    });
+  }
+
+  const newAccessToken = await AuthServices.refreshToken(refreshToken);
+  res.status(httpStatus.OK).json({
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'New access token generated successfully',
+    token: newAccessToken,
+  });
+});
+
+export const AuthControllers = { register, login, refreshToken };

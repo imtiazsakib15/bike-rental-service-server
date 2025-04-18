@@ -3,7 +3,7 @@ import AppError from '../../errors/AppError';
 import { IUser } from '../user/user.interface';
 import User from '../user/user.model';
 import { ILoginUser } from './auth.interface';
-import { createToken, isPasswordMatch } from './auth.utils';
+import { createToken, isPasswordMatch, verifyToken } from './auth.utils';
 import config from '../../config';
 
 const register = async (payload: IUser) => {
@@ -69,4 +69,26 @@ const login = async (payload: ILoginUser) => {
   return { user, accessToken, refreshToken };
 };
 
-export const AuthServices = { register, login };
+const refreshToken = async (token: string) => {
+  const decoded = verifyToken(token, config.REFRESH_TOKEN_SECRET as string);
+
+  if (!decoded) throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token');
+  const user = await User.findOne({ email: decoded.email });
+  if (!user) throw new AppError(httpStatus.UNAUTHORIZED, 'No user found');
+
+  if (!user.isActive)
+    throw new AppError(httpStatus.UNAUTHORIZED, 'User is blocked');
+
+  const jwtPayload = {
+    email: user.email,
+    role: user.role,
+  };
+  const accessToken = createToken(
+    jwtPayload,
+    config.ACCESS_TOKEN_SECRET as string,
+    config.ACCESS_TOKEN_EXPIRES_IN as string,
+  );
+
+  return { accessToken };
+};
+export const AuthServices = { register, login, refreshToken };
