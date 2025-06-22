@@ -71,8 +71,11 @@ const login = async (payload: ILoginUser) => {
 
 const refreshToken = async (token: string) => {
   const decoded = verifyToken(token, config.REFRESH_TOKEN_SECRET as string);
-
   if (!decoded) throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid token');
+
+  const isTokenExpired = decoded.exp! < Date.now() / 1000;
+  if (isTokenExpired)
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Token expired');
   const user = await User.findOne({ email: decoded.email });
   if (!user) throw new AppError(httpStatus.UNAUTHORIZED, 'No user found');
 
