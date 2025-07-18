@@ -7,4 +7,11 @@ export interface IRental {
   returnTime?: Date | null;
   totalCost?: number;
   isReturned?: boolean;
+  serviceCharge?: IPayment;
+  rent?: IPayment;
+}
+
+interface IPayment {
+  transactionId?: string;
+  isPaid?: boolean;
 }

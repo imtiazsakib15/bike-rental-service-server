@@ -33,6 +33,26 @@ const rentalSchema = new Schema<IRental>(
       type: Boolean,
       default: false,
     },
+    serviceCharge: {
+      transactionId: {
+        type: String,
+        default: null,
+      },
+      isPaid: {
+        type: Boolean,
+        default: false,
+      },
+    },
+    rent: {
+      transactionId: {
+        type: String,
+        default: null,
+      },
+      isPaid: {
+        type: Boolean,
+        default: false,
+      },
+    },
   },
   {
     timestamps: true,
