@@ -6,6 +6,8 @@ import { IRental } from './rental.interface';
 import Rental from './rental.model';
 import mongoose from 'mongoose';
 import { decodeUserFromAccessToken } from '../auth/auth.utils';
+import { initiatePayment } from '../payment/payment.utils';
+import generateUniqueId from 'generate-unique-id';
 
 const createIntoDB = async (token: string, payload: IRental) => {
   const decodedUserInfo = decodeUserFromAccessToken(token);
@@ -20,10 +22,19 @@ const createIntoDB = async (token: string, payload: IRental) => {
       throw new AppError(httpStatus.BAD_REQUEST, 'Bike is not available');
 
     const user = await User.findOne({ email: decodedUserInfo.email });
+    const transactionId: string =
+      'SC-' +
+      generateUniqueId({
+        length: 10,
+      });
+
     const rentalDetails = {
       userId: user?._id,
       bikeId: payload.bikeId,
       startTime: payload.startTime,
+      serviceCharge: {
+        transactionId,
+      },
     };
     const [rental] = await Rental.create([rentalDetails], { session });
     if (!rental)
@@ -44,7 +55,18 @@ const createIntoDB = async (token: string, payload: IRental) => {
       );
 
     await session.commitTransaction();
-    return rental;
+
+    const paymentInfo = {
+      transactionId,
+      amount: 500,
+      description: 'Payment for bike rental service charge',
+      customerName: user!.name,
+      customerEmail: user!.email,
+      customerPhone: user!.phone,
+    };
+    const paymentResult = await initiatePayment(paymentInfo);
+
+    return paymentResult;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
