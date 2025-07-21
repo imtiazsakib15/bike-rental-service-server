@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Confirmation</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        margin: 0;
+      }
+
+      .confirmation-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        max-width: 500px;
+        width: 100%;
+        overflow: hidden;
+        text-align: center;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white;
+        padding: 40px 20px;
+        position: relative;
+      }
+
+      .checkmark {
+        width: 80px;
+        height: 80px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .checkmark svg {
+        width: 48px;
+        height: 48px;
+        color: #10b981;
+      }
+
+      h1 {
+        font-weight: 700;
+        font-size: 28px;
+        margin: 0;
+        letter-spacing: -0.5px;
+      }
+
+      .content {
+        padding: 40px;
+      }
+
+      .message {
+        font-size: 18px;
+        color: #4b5563;
+        margin-bottom: 30px;
+        line-height: 1.6;
+      }
+
+      .transaction-details {
+        background: #f9fafb;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 30px;
+        text-align: left;
+      }
+
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .detail-row:last-child {
+        border-bottom: none;
+      }
+
+      .detail-label {
+        color: #6b7280;
+        font-weight: 500;
+      }
+
+      .detail-value {
+        color: #1f2937;
+        font-weight: 600;
+      }
+
+      .amount {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 20px 0;
+      }
+
+      .btn {
+        background: #4f46e5;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 16px 32px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-block;
+        text-decoration: none;
+        margin-top: 10px;
+      }
+
+      .btn:hover {
+        background: #4338ca;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+      }
+
+      .btn-outline {
+        background: transparent;
+        border: 1px solid #d1d5db;
+        color: #4b5563;
+        margin-left: 15px;
+      }
+
+      .btn-outline:hover {
+        background: #f9fafb;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      .footer {
+        color: #9ca3af;
+        font-size: 14px;
+        padding: 20px;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      @media (max-width: 480px) {
+        .content {
+          padding: 25px;
+        }
+
+        .btn {
+          display: block;
+          width: 100%;
+          margin-bottom: 15px;
+        }
+
+        .btn-outline {
+          margin-left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="confirmation-card">
+      <div class="header">
+        <div class="checkmark">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </div>
+        <h1>{{message}}</h1>
+      </div>
+
+      <div class="content">
+        <p class="message">
+          Thank you for your payment. Your transaction has been completed
+          successfully.
+        </p>
+
+        <div class="transaction-details">
+          <div class="detail-row">
+            <span class="detail-label">Transaction ID</span>
+            <span class="detail-value">{{transactionId}}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Date & Time</span>
+            <span class="detail-value">{{date}}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Payment Method</span>
+            <span class="detail-value">{{paymentMethod}}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Billed to</span>
+            <span class="detail-value">{{email}}</span>
+          </div>
+        </div>
+
+        <div class="amount">{{amount}} TK</div>
+
+        <a href="{{homePage}}" class="btn">Return to Home</a>
+      </div>
+
+      <div class="footer">
+        <p>Need help? Contact support@example.com</p>
+      </div>
+    </div>
+  </body>
+</html>
