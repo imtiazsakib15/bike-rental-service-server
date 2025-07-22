@@ -28,13 +28,20 @@ const updateReturnStatus = catchAsync(async (req, res) => {
   });
 });
 
+const getAllRentals = catchAsync(async (req, res) => {
+  const result = await RentalServices.getAllRentalsFromDB();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'All rentals retrieved successfully',
+    data: result,
+  });
+});
+
 const getRentalOfUsers = catchAsync(async (req, res) => {
   const token = req.headers.authorization?.split(' ')[1] as string;
   const result = await RentalServices.getRentalOfUsersFromDB(token);
-  if (result?.length === 0)
-    res
-      .status(httpStatus.NOT_FOUND)
-      .json({ success: false, message: 'No Data Found', data: result });
 
   sendResponse(res, {
     success: true,
@@ -47,5 +54,6 @@ const getRentalOfUsers = catchAsync(async (req, res) => {
 export const RentalControllers = {
   create,
   updateReturnStatus,
+  getAllRentals,
   getRentalOfUsers,
 };

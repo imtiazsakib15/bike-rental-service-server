@@ -20,6 +20,8 @@ router.put(
   RentalControllers.updateReturnStatus,
 );
 
+router.get('/all', auth(USER_ROLE.ADMIN), RentalControllers.getAllRentals);
+
 router.get(
   '/',
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),

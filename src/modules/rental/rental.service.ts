@@ -129,6 +129,14 @@ const updateReturnStatusIntoDB = async (rentalId: string) => {
   }
 };
 
+const getAllRentalsFromDB = async () => {
+  const result = await Rental.find()
+    .populate('bikeId')
+    .populate('userId', 'name email phone');
+
+  return result;
+};
+
 const getRentalOfUsersFromDB = async (token: string) => {
   const decodedUserInfo = decodeUserFromAccessToken(token);
 
@@ -143,5 +151,6 @@ const getRentalOfUsersFromDB = async (token: string) => {
 export const RentalServices = {
   createIntoDB,
   updateReturnStatusIntoDB,
+  getAllRentalsFromDB,
   getRentalOfUsersFromDB,
 };
