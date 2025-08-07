@@ -8,6 +8,8 @@ import mongoose from 'mongoose';
 import { decodeUserFromAccessToken } from '../auth/auth.utils';
 import { initiatePayment } from '../payment/payment.utils';
 import generateUniqueId from 'generate-unique-id';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { SEARCHABLE_FIELDS } from './rental.constant';
 
 const createIntoDB = async (token: string, payload: IRental) => {
   const decodedUserInfo = decodeUserFromAccessToken(token);
@@ -129,12 +131,21 @@ const updateReturnStatusIntoDB = async (rentalId: string) => {
   }
 };
 
-const getAllRentalsFromDB = async () => {
-  const result = await Rental.find()
-    .populate('bikeId')
-    .populate('userId', 'name email phone');
+const getAllRentalsFromDB = async (query: Record<string, unknown>) => {
+  const rentalQuery = new QueryBuilder(
+    Rental.find().populate('bikeId').populate('userId', 'name email phone'),
+    query,
+  )
+    .search(SEARCHABLE_FIELDS)
+    .filter()
+    .sort()
+    .pagination()
+    .fieldLimiting();
+  const rentals = await rentalQuery.modelQuery;
 
-  return result;
+  const total = await Rental.countDocuments();
+
+  return { rentals, total };
 };
 
 const getRentalOfUsersFromDB = async (token: string) => {

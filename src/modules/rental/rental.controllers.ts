@@ -29,13 +29,14 @@ const updateReturnStatus = catchAsync(async (req, res) => {
 });
 
 const getAllRentals = catchAsync(async (req, res) => {
-  const result = await RentalServices.getAllRentalsFromDB();
+  const result = await RentalServices.getAllRentalsFromDB(req.query);
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: 'All rentals retrieved successfully',
-    data: result,
+    meta: { total: result.total },
+    data: result.rentals,
   });
 });
 
